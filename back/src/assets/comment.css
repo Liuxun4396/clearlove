@@ -1,11 +1,16 @@
 * {
-    padding: 0;
-    margin : 0;
+  padding: 0;
+  margin: 0;
 }
 
 html,
 body,
 #app {
-    height: 100%;
-
+  height: 100%;
+}
+.el-breadcrumb {
+  height: 40px;
+  line-height: 40px;
+  background-color: #d4dae0;
+  padding-left: 20px;
 }

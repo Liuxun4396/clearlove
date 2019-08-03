@@ -1,0 +1,117 @@
+<div class="">
+  <el-breadcrumb separator-class="el-icon-arrow-right">
+    <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+    <el-breadcrumb-item>活动管理</el-breadcrumb-item>
+    <el-breadcrumb-item>活动列表</el-breadcrumb-item>
+  </el-breadcrumb>
+  <el-row :gutter="20">
+    <el-col :span="8">
+      <div class="grid-content bg-purple">
+        <div style="margin-top: 15px;">
+          <el-input
+            placeholder="请输入内容"
+            v-model="input3"
+            class="input-with-select"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="serach"
+            ></el-button>
+          </el-input>
+        </div>
+      </div>
+    </el-col>
+    <el-col :span="8">
+      <div class="grid-content bg-purple-light">
+        <el-button class="bread" type="success" @click="showAdd"
+          >添加用户</el-button
+        >
+      </div>
+    </el-col>
+  </el-row>
+  <el-table :data="tableData" style="width: 100%">
+    <el-table-column prop="username" label="姓名" width="180">
+    </el-table-column>
+    <el-table-column prop="email" label="邮箱" width="180"> </el-table-column>
+    <el-table-column prop="mobile" label="电话" width="180"> </el-table-column>
+    <el-table-column label="状态">
+      <template slot-scope="scope">
+        <el-switch
+          v-model="scope.row.mg_state"
+          @change="change(scope.row.id, scope.row.mg_state)"
+        >
+        </el-switch>
+      </template>
+    </el-table-column>
+    <el-table-column label="操作">
+      <template slot-scope="scope">
+        <el-button
+          size="mini"
+          plain
+          type="primary"
+          icon="el-icon-edit"
+          @click="showM(scope)"
+        ></el-button>
+
+        <el-button
+          size="mini"
+          plain
+          type="danger"
+          icon="el-icon-delete"
+          @click="del(scope.row.id)"
+        ></el-button>
+        <el-button size="mini" plain type="success" icon="el-icon-check"
+          >分配角色</el-button
+        >
+      </template>
+    </el-table-column>
+  </el-table>
+  <el-pagination
+    background
+    layout="prev, pager, next"
+    :total="total"
+    :page-size="2"
+    @current-change="changePage"
+  >
+  </el-pagination>
+
+  <el-dialog title="添加用户" :visible.sync="showadd">
+    <el-form ref="addform" :model="addform" :rules="rules" label-width="80px">
+      <el-form-item label="姓名" prop="username">
+        <el-input v-model="addform.username" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input v-model="addform.password" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="addform.email" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="电话" prop="mobile">
+        <el-input v-model="addform.mobile" autocomplete="off"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="showadd = false">取 消</el-button>
+      <el-button type="primary" @click="add">确 定</el-button>
+    </div>
+  </el-dialog>
+
+  <el-dialog title="修改用户" :visible.sync="showMove">
+    <el-form ref="moveData" :model="moveData" :rules="rules" label-width="80px">
+      <el-form-item label="姓名">
+        <el-tag>{{ moveData.username }}</el-tag>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
+        <el-input v-model="moveData.email" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item label="电话" prop="mobile">
+        <el-input v-model="moveData.mobile" autocomplete="off"></el-input>
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="showMove = false">取 消</el-button>
+      <el-button type="primary" @click="move">确 定</el-button>
+    </div>
+  </el-dialog>
+</div>

@@ -38,8 +38,8 @@
 </template>
 <script>
 import axios from 'axios'
-export default {
 
+export default {
   data () {
     return {
       ruleForm: {
@@ -49,7 +49,7 @@ export default {
       rules: {
         username: [
           { required: true, message: '请输入账号', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 5, max: 15, message: '长度在 5 到 15 个字符', trigger: 'blur' }
         ],
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
@@ -60,31 +60,37 @@ export default {
     }
   },
   methods: {
+
     submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs.ruleForm.validate(async (valid) => {
         if (!valid) {
-          return false
+          return false;
         }
-        axios.post('http://localhost:8888/api/private/v1/login', this.ruleForm).then(res => {
-          console.log(res)
-          if (res.data.meta.status === 200) {
-            this.$message({
-              message: '登录成功！',
-              type: 'success'
-            })
-            this.$router.push('/home')
-          } else {
-            this.$message({
-              message: '账号或密码错误！',
-              type: 'error'
-            })
-          }
-        })
-      })
+        const res = await this.$axios.post('login', this.ruleForm)
+        console.log(res)
+        if (res.data.meta.status === 200) {
+          localStorage.setItem('token', res.data.data.token)
+          this.$message({
+            message: '登录成功！',
+            type: 'success',
+            duration: 1000
+          });
+          this.$router.push('/home')
+        } else {
+          this.$message({
+            message: '登录失败！',
+            type: 'error',
+            duration: 1000
+
+          });
+        }
+
+      });
     },
     resetForm (formName) {
       this.$refs[formName].resetFields()
     }
+
   }
 }
 </script>
