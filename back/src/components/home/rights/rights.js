@@ -63,7 +63,7 @@ export default {
           duration: 800
         })
         this.showM = false
-        this.getr()
+        this.getList()
       }
     }
   },

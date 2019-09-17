@@ -31,24 +31,21 @@
           text-color="#fff"
           active-text-color="#ffd04b"
         >
-          <el-submenu index="1">
+          <el-submenu
+            :index="v.id+''"
+            v-for="v in list"
+            :key="v.id"
+          >
             <template slot="title">
               <i class="el-icon-location"></i>
-              <span>用户管理</span>
+              <span>{{v.authName}}</span>
             </template>
-            <el-menu-item-group>
-              <el-menu-item index="/users">用户列表</el-menu-item>
-            </el-menu-item-group>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title">
-              <i class="el-icon-location"></i>
-              <span>权限管理</span>
-            </template>
-            <el-menu-item-group>
-              <el-menu-item index="/rights">角色列表</el-menu-item>
-              <el-menu-item index="/roles">权限列表</el-menu-item>
-            </el-menu-item-group>
+
+            <el-menu-item
+              :index="'/'+v2.path"
+              v-for="v2 in v.children"
+              :key="v2.id"
+            >{{v2.authName}}</el-menu-item>
           </el-submenu>
 
         </el-menu>
@@ -65,10 +62,21 @@
 
 export default {
 
-
+  data () {
+    return {
+      list: []
+    }
+  },
 
   methods: {
     diz () {
+
+      if (this.$route.path === '/goods-add') {
+        return '/goods'
+      }
+      if (this.$route.path.startsWith('/users')) {
+        return '/users'
+      }
       return this.$route.path
     },
     async out () {
@@ -94,12 +102,13 @@ export default {
       }
 
     },
-    handleOpen (key, keyPath) {
-      console.log(key, keyPath)
-    },
-    handleClose (key, keyPath) {
-      console.log(key, keyPath)
+    async getList () {
+      const res = await this.$axios.get('menus')
+      this.list = res.data.data
     }
+  },
+  created () {
+    this.getList()
   }
 }
 </script>

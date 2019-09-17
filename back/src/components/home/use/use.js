@@ -8,11 +8,16 @@ export default {
       pagenum: 1,
       showadd: false,
       showMove: false,
+      distributions: false,
       addform: {
         username: '',
         password: '',
         email: '',
         mobile: '',
+      },
+      distributionForm: {
+        name: '',
+        region: []
       },
       rules: {
         username: [
@@ -38,12 +43,20 @@ export default {
         email: '',
         mobile: '',
         id: ''
+      },
+      disdata: {
+        id: 0,
+        rid: '',
+        name: ''
       }
     }
   },
 
   created () {
-    this.getUser()
+    let i = this.$route.params.id
+
+    this.getUser(i)
+    this.getDis()
   },
   methods: {
     async getUser (pagenum = 1, query = '') {
@@ -60,6 +73,7 @@ export default {
       this.pagenum = res.data.data.pagenum
     },
     changePage (i) {
+      this.$router.push('/users/' + i)
       this.getUser(i, this.input3)
     },
     serach () {
@@ -129,6 +143,35 @@ export default {
         this.getUser(this.pagenum, this.input3)
       }
 
+    },
+    async distribution (res) {
+      console.log(res)
+      this.distributions = true
+      this.distributionForm.name = res.username
+      this.disdata.id = res.id
+      const rs = await this.$axios.get(`users/${res.id}`)
+      console.log(rs)
+      this.disdata.rid = rs.data.data.rid
+    },
+    async getDis () {
+      const res = await this.$axios.get('roles')
+      console.log(res)
+      res.data.data.forEach(v => {
+        this.distributionForm.region.push(v)
+      });
+    },
+    async dis () {
+      const res = await this.$axios.put(`users/${this.disdata.id}/role`, { rid: this.disdata.rid })
+      console.log(res)
+      if (res.data.meta.status === 200) {
+        this.distributions = false
+        this.getUser(this.pagenum, this.input3)
+        this.$message({
+          message: '修改成功！',
+          type: 'success',
+          duration: 800
+        })
+      }
     }
 
   },

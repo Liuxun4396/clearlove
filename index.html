@@ -1,9 +1,39 @@
-<div>one</div>
-<div>two</div>
-<div>333</div>
-<div>冲突了</div>
-<div>7777</div>
-<div>王战军好骚啊</div>
-<div>王战军的代码</div>
-<div>2</div>
-<div>不让冲</div>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <style>
+      div {
+        position: absolute;
+        transform: translate(-55%);
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      function fun(n, o) {
+        console.log(o)
+        return {
+          fun: function(m) {
+            return fun(m, n)
+          }
+        }
+      }
+      var a = fun(0)
+      console.log(a)
+      a.fun(1)
+      a.fun(2)
+      a.fun(3)
+      var b = fun(0)
+        .fun(1)
+        .fun(2)
+        .fun(3)
+      var c = fun(0).fun(1)
+      c.fun(2)
+      c.fun(3)
+    </script>
+  </body>
+</html>
